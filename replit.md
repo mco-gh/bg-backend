@@ -87,9 +87,10 @@ The server runs on http://0.0.0.0:5000
 - Port: 5000 (WebView)
 
 **Production Deployment:**
-- Deployment Type: VM (always running for WebSocket support)
-- Run Command: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 --reuse-port app:app`
+- Deployment Type: Autoscale (pay-per-use, supports WebSocket)
+- Run Command: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 app:app`
 - Health Check Endpoint: `/health`
+- Note: Active game sessions are billed as ongoing requests. Server may restart during low traffic.
 
 ## Web Test Harness
 

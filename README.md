@@ -55,11 +55,18 @@ The server will start on `http://0.0.0.0:5000` by default.
 ### Production Deployment
 
 The server is configured for production deployment on Replit using:
-- **Deployment Type**: Reserved VM (always running, required for WebSocket connections)
+- **Deployment Type**: Autoscale (pay-per-use, supports WebSocket connections)
 - **Web Server**: Gunicorn with Eventlet worker class
-- **Run Command**: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 --reuse-port app:app`
+- **Run Command**: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 app:app`
 
 The deployment automatically uses the `/health` endpoint for health checks.
+
+**Note on Autoscale with WebSockets:**
+- Autoscale supports Flask-SocketIO and WebSocket connections
+- You're only charged when actively serving requests
+- Active game sessions count as ongoing requests for billing purposes
+- The server may restart during low traffic, disconnecting active games
+- For production use with many concurrent games, consider Reserved VM for better stability
 
 ## Testing the Backend
 
