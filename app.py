@@ -230,7 +230,7 @@ def handle_disconnect():
                 print(f'Game {game_id} deleted due to player disconnect')
 
 @socketio.on('create-game')
-def handle_create_game():
+def handle_create_game(data=None):
     game_id = generate_game_id()
     
     while game_id in games:
