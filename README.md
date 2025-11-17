@@ -1,0 +1,170 @@
+# Backgammon Backend Server
+
+A real-time Flask-SocketIO backend server for a two-player online backgammon game.
+
+## Features
+
+- Real-time WebSocket communication using Socket.IO
+- Server-authoritative game state to prevent cheating
+- Human-readable game IDs (e.g., ABC-DEF-GHI)
+- Support for two players per game session
+- Complete backgammon game logic including:
+  - Dice rolling
+  - Move validation
+  - Turn management
+  - Player disconnect handling
+
+## Technology Stack
+
+- **Language:** Python 3.11
+- **Framework:** Flask
+- **Real-time Communication:** Flask-SocketIO
+- **Async Server:** Eventlet
+
+## Installation
+
+### 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Environment Setup (Optional)
+
+Create a `.env` file in the project root:
+
+```
+SESSION_SECRET=your-secret-key-here
+PORT=5000
+```
+
+If not provided, defaults will be used.
+
+## Running the Server
+
+Start the server with:
+
+```bash
+python app.py
+```
+
+The server will start on `http://0.0.0.0:5000` by default.
+
+## API Documentation
+
+### Socket.IO Events
+
+#### Client → Server Events
+
+**1. `create-game`**
+- **Payload:** `{}`
+- **Description:** Creates a new game session and returns a unique game ID
+- **Response:** `game-created` event with `{ "gameId": "ABC-DEF-GHI" }`
+
+**2. `join-game`**
+- **Payload:** `{ "gameId": "ABC-DEF-GHI" }`
+- **Description:** Joins an existing game as the second player
+- **Response:** `game-started` event to both players with initial board state
+
+**3. `roll-dice`**
+- **Payload:** `{ "gameId": "ABC-DEF-GHI" }`
+- **Description:** Rolls two dice for the current player's turn
+- **Response:** `dice-rolled` event with `{ "dice": [1-6, 1-6], "turn": "white"|"black" }`
+
+**4. `move-piece`**
+- **Payload:** `{ "gameId": "ABC-DEF-GHI", "fromPointIndex": 0-23, "toPointIndex": 0-23 }`
+- **Description:** Moves a checker from one point to another
+- **Response:** `board-updated` event with new board state
+
+**5. `end-turn`**
+- **Payload:** `{ "gameId": "ABC-DEF-GHI" }`
+- **Description:** Ends the current player's turn
+- **Response:** `new-turn` event with `{ "turn": "white"|"black" }`
+
+#### Server → Client Events
+
+**1. `game-created`**
+- **Payload:** `{ "gameId": "ABC-DEF-GHI" }`
+- **Description:** Confirms game creation with unique ID
+
+**2. `game-started`**
+- **Payload:** `{ "boardState": [...], "turn": "white", "players": { "white": "sid1", "black": "sid2" } }`
+- **Description:** Signals that both players are connected
+
+**3. `dice-rolled`**
+- **Payload:** `{ "dice": [number, number], "turn": "white"|"black" }`
+- **Description:** Broadcasts dice roll results
+
+**4. `board-updated`**
+- **Payload:** `{ "boardState": [...] }`
+- **Description:** Broadcasts updated board state after a move
+
+**5. `new-turn`**
+- **Payload:** `{ "turn": "white"|"black" }`
+- **Description:** Signals turn change
+
+**6. `player-disconnected`**
+- **Payload:** `{ "message": "The other player has disconnected" }`
+- **Description:** Notifies when opponent disconnects
+
+**7. `error`**
+- **Payload:** `{ "message": "Error description" }`
+- **Description:** Sends error messages for invalid actions
+
+### HTTP Endpoints
+
+**GET `/`**
+- Returns server status and number of active games
+
+**GET `/health`**
+- Health check endpoint
+
+## Game State Structure
+
+### Board State
+The board is represented as an array of 24 `PointState` objects:
+
+```python
+{
+  "checkers": int,      # Number of checkers on this point
+  "player": "white" | "black" | None  # Owner of the checkers
+}
+```
+
+### Initial Board Setup
+- Points are indexed 0-23
+- White pieces start at points: 0 (2), 11 (5), 16 (3), 18 (5)
+- Black pieces start at points: 23 (2), 12 (5), 7 (3), 5 (5)
+
+## Development
+
+### Project Structure
+
+```
+.
+├── app.py              # Main Flask-SocketIO server
+├── requirements.txt    # Python dependencies
+├── README.md          # This file
+└── .env               # Environment variables (optional)
+```
+
+### Testing with a Client
+
+Connect to the server using a Socket.IO client:
+
+```javascript
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:5000');
+
+// Create a game
+socket.emit('create-game', {});
+
+socket.on('game-created', (data) => {
+  console.log('Game ID:', data.gameId);
+});
+```
+
+## License
+
+This project is provided as-is for educational and development purposes.
