@@ -42,6 +42,8 @@ If not provided, defaults will be used.
 
 ## Running the Server
 
+### Development Mode
+
 Start the server with:
 
 ```bash
@@ -49,6 +51,15 @@ python app.py
 ```
 
 The server will start on `http://0.0.0.0:5000` by default.
+
+### Production Deployment
+
+The server is configured for production deployment on Replit using:
+- **Deployment Type**: Reserved VM (always running, required for WebSocket connections)
+- **Web Server**: Gunicorn with Eventlet worker class
+- **Run Command**: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 --reuse-port app:app`
+
+The deployment automatically uses the `/health` endpoint for health checks.
 
 ## Testing the Backend
 

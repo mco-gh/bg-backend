@@ -29,3 +29,11 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 44109
+externalPort = 3000
+
+[deployment]
+deploymentTarget = "vm"
+run = ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:5000", "--reuse-port", "app:app"]

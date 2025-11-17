@@ -75,7 +75,7 @@ The board is an array of 24 points (indices 0-23):
 
 ## Running the Server
 
-**Start Server:**
+**Development Mode:**
 ```bash
 python app.py
 ```
@@ -85,6 +85,11 @@ The server runs on http://0.0.0.0:5000
 - Name: `backgammon-server`
 - Command: `python app.py`
 - Port: 5000 (WebView)
+
+**Production Deployment:**
+- Deployment Type: VM (always running for WebSocket support)
+- Run Command: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 --reuse-port app:app`
+- Health Check Endpoint: `/health`
 
 ## Web Test Harness
 
