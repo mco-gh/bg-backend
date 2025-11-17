@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import random
 import string
@@ -490,6 +490,14 @@ def handle_end_turn(data):
 
 @app.route('/')
 def index():
+    return send_from_directory('static', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('static', path)
+
+@app.route('/api/status')
+def status():
     return {
         'status': 'Backgammon Server Running',
         'active_games': len(games)

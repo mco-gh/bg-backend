@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backgammon Backend Test Harness</title>
+    <link rel="stylesheet" href="/css/harness.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Backgammon Backend Test Harness</h1>
+            <p>Comprehensive regression testing for all backgammon mechanics</p>
+        </header>
+
+        <div class="main-content">
+            <div class="client-panel" id="player1-panel">
+                <h2>Player 1 (White)</h2>
+                
+                <div class="connection-section">
+                    <h3>Connection</h3>
+                    <button id="p1-create" class="btn btn-primary">Create Game</button>
+                    <input type="text" id="p1-game-id" placeholder="Game ID" readonly>
+                    <div class="status" id="p1-status">Disconnected</div>
+                </div>
+
+                <div class="board-section">
+                    <h3>Board State</h3>
+                    <div class="board-info">
+                        <div>Turn: <span id="p1-turn">-</span></div>
+                        <div>White Bar: <span id="p1-white-bar">0</span></div>
+                        <div>Black Bar: <span id="p1-black-bar">0</span></div>
+                        <div>White Off: <span id="p1-white-off">0</span></div>
+                        <div>Black Off: <span id="p1-black-off">0</span></div>
+                    </div>
+                    <div id="p1-board" class="board-grid"></div>
+                </div>
+
+                <div class="controls-section">
+                    <h3>Game Controls</h3>
+                    <div class="dice-display">
+                        Dice: <span id="p1-dice">-</span>
+                    </div>
+                    <button id="p1-roll" class="btn">Roll Dice</button>
+                    <div class="move-controls">
+                        <input type="number" id="p1-from" placeholder="From (-1=bar)" min="-1" max="23">
+                        <span>→</span>
+                        <input type="number" id="p1-to" placeholder="To (24/-1=off)" min="-1" max="24">
+                        <button id="p1-move" class="btn">Move Piece</button>
+                    </div>
+                    <button id="p1-end-turn" class="btn">End Turn</button>
+                </div>
+
+                <div class="log-section">
+                    <h3>Event Log</h3>
+                    <div id="p1-log" class="log-output"></div>
+                    <button id="p1-clear-log" class="btn btn-small">Clear Log</button>
+                </div>
+            </div>
+
+            <div class="client-panel" id="player2-panel">
+                <h2>Player 2 (Black)</h2>
+                
+                <div class="connection-section">
+                    <h3>Connection</h3>
+                    <input type="text" id="p2-game-id-input" placeholder="Enter Game ID">
+                    <button id="p2-join" class="btn btn-primary">Join Game</button>
+                    <div class="status" id="p2-status">Disconnected</div>
+                </div>
+
+                <div class="board-section">
+                    <h3>Board State</h3>
+                    <div class="board-info">
+                        <div>Turn: <span id="p2-turn">-</span></div>
+                        <div>White Bar: <span id="p2-white-bar">0</span></div>
+                        <div>Black Bar: <span id="p2-black-bar">0</span></div>
+                        <div>White Off: <span id="p2-white-off">0</span></div>
+                        <div>Black Off: <span id="p2-black-off">0</span></div>
+                    </div>
+                    <div id="p2-board" class="board-grid"></div>
+                </div>
+
+                <div class="controls-section">
+                    <h3>Game Controls</h3>
+                    <div class="dice-display">
+                        Dice: <span id="p2-dice">-</span>
+                    </div>
+                    <button id="p2-roll" class="btn">Roll Dice</button>
+                    <div class="move-controls">
+                        <input type="number" id="p2-from" placeholder="From (-1=bar)" min="-1" max="23">
+                        <span>→</span>
+                        <input type="number" id="p2-to" placeholder="To (24/-1=off)" min="-1" max="24">
+                        <button id="p2-move" class="btn">Move Piece</button>
+                    </div>
+                    <button id="p2-end-turn" class="btn">End Turn</button>
+                </div>
+
+                <div class="log-section">
+                    <h3>Event Log</h3>
+                    <div id="p2-log" class="log-output"></div>
+                    <button id="p2-clear-log" class="btn btn-small">Clear Log</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-scenarios">
+            <h2>🧪 Automated Test Scenarios</h2>
+            <div class="scenario-grid">
+                <button class="btn btn-scenario" id="scenario-basic">Basic Game Flow</button>
+                <button class="btn btn-scenario" id="scenario-hit">Hit & Bar Re-entry</button>
+                <button class="btn btn-scenario" id="scenario-bearoff">Bearing Off (Exact)</button>
+                <button class="btn btn-scenario" id="scenario-overshoot">Bearing Off (Overshoot)</button>
+                <button class="btn btn-scenario" id="scenario-win">Win Condition</button>
+                <button class="btn btn-scenario" id="scenario-errors">Error Handling</button>
+            </div>
+            <div id="scenario-log" class="scenario-log"></div>
+        </div>
+    </div>
+
+    <script src="/js/harness.js"></script>
+</body>
+</html>
