@@ -167,11 +167,11 @@ def is_valid_move(game: GameSession, from_point: int, to_point: int, player: Pla
                 return False
             
             if player == 'white':
-                for i in range(from_point):
+                for i in range(from_point + 1, 24):
                     if game.board_state[i]['player'] == 'white' and game.board_state[i]['checkers'] > 0:
                         return False
             else:
-                for i in range(from_point + 1, 24):
+                for i in range(from_point):
                     if game.board_state[i]['player'] == 'black' and game.board_state[i]['checkers'] > 0:
                         return False
         

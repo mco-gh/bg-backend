@@ -72,8 +72,10 @@ The server will start on `http://0.0.0.0:5000` by default.
 - **Response:** `dice-rolled` event with `{ "dice": [1-6, 1-6], "turn": "white"|"black" }`
 
 **4. `move-piece`**
-- **Payload:** `{ "gameId": "ABC-DEF-GHI", "fromPointIndex": 0-23, "toPointIndex": 0-23 }`
+- **Payload:** `{ "gameId": "ABC-DEF-GHI", "fromPointIndex": -1 to 23, "toPointIndex": -1 to 24 }`
 - **Description:** Moves a checker from one point to another
+  - Use `fromPointIndex: -1` to move from the bar
+  - Use `toPointIndex: 24` (white) or `-1` (black) to bear off
 - **Response:** `board-updated` event with new board state
 
 **5. `end-turn`**
@@ -88,7 +90,7 @@ The server will start on `http://0.0.0.0:5000` by default.
 - **Description:** Confirms game creation with unique ID
 
 **2. `game-started`**
-- **Payload:** `{ "boardState": [...], "turn": "white", "players": { "white": "sid1", "black": "sid2" } }`
+- **Payload:** `{ "boardState": [...], "turn": "white", "players": { "white": "sid1", "black": "sid2" }, "whiteBar": 0, "blackBar": 0, "whiteOff": 0, "blackOff": 0 }`
 - **Description:** Signals that both players are connected
 
 **3. `dice-rolled`**
@@ -96,8 +98,8 @@ The server will start on `http://0.0.0.0:5000` by default.
 - **Description:** Broadcasts dice roll results
 
 **4. `board-updated`**
-- **Payload:** `{ "boardState": [...] }`
-- **Description:** Broadcasts updated board state after a move
+- **Payload:** `{ "boardState": [...], "whiteBar": int, "blackBar": int, "whiteOff": int, "blackOff": int }`
+- **Description:** Broadcasts updated board state after a move, including bar and off counts
 
 **5. `new-turn`**
 - **Payload:** `{ "turn": "white"|"black" }`
@@ -110,6 +112,10 @@ The server will start on `http://0.0.0.0:5000` by default.
 **7. `error`**
 - **Payload:** `{ "message": "Error description" }`
 - **Description:** Sends error messages for invalid actions
+
+**8. `game-won`**
+- **Payload:** `{ "winner": "white"|"black" }`
+- **Description:** Announces when a player has borne off all 15 checkers and won the game
 
 ### HTTP Endpoints
 
@@ -131,10 +137,26 @@ The board is represented as an array of 24 `PointState` objects:
 }
 ```
 
+### Bar and Off Positions
+- **Bar:** Checkers that have been hit are placed on the bar
+  - `whiteBar`: Count of white checkers on the bar
+  - `blackBar`: Count of black checkers on the bar
+  - Players must re-enter from the bar before making other moves
+  - Use `fromPointIndex: -1` to move from bar
+
+- **Off:** Checkers that have been borne off (removed from the board)
+  - `whiteOff`: Count of white checkers borne off
+  - `blackOff`: Count of black checkers borne off
+  - Players can only bear off when all checkers are in their home board
+  - Use `toPointIndex: 24` (white) or `-1` (black) to bear off
+  - Game is won when a player bears off all 15 checkers
+
 ### Initial Board Setup
 - Points are indexed 0-23
 - White pieces start at points: 0 (2), 11 (5), 16 (3), 18 (5)
 - Black pieces start at points: 23 (2), 12 (5), 7 (3), 5 (5)
+- White's home board: points 18-23
+- Black's home board: points 0-5
 
 ## Development
 
