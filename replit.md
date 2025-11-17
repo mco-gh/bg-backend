@@ -37,7 +37,13 @@ This is a real-time Flask-SocketIO backend server for a two-player online backga
 ├── requirements.txt    # Python dependencies
 ├── README.md          # Setup and API documentation
 ├── replit.md          # Project overview (this file)
-└── .gitignore         # Git ignore patterns
+├── .gitignore         # Git ignore patterns
+└── static/            # Web test harness
+    ├── index.html     # Test harness HTML
+    ├── css/
+    │   └── harness.css    # Test harness styles
+    └── js/
+        └── harness.js     # Test harness logic
 ```
 
 ### Key Components
@@ -79,6 +85,28 @@ The server runs on http://0.0.0.0:5000
 - Name: `backgammon-server`
 - Command: `python app.py`
 - Port: 5000 (WebView)
+
+## Web Test Harness
+
+A comprehensive web-based test harness is available at the root URL (`/`) for regression testing all backgammon mechanics:
+
+**Features:**
+- Dual-client interface (test both players in one browser)
+- Real-time board visualization (24 points + bar/off counters)
+- Event logging with timestamps
+- Manual game controls
+- Automated test scenarios:
+  - Basic game flow
+  - Hit & bar re-entry
+  - Bearing off (exact and overshoot)
+  - Win condition
+  - Error handling
+
+**Usage:**
+1. Open `http://localhost:5000/`
+2. Player 1: Click "Create Game"
+3. Player 2: Enter Game ID and click "Join Game"
+4. Use controls to play or run automated scenarios
 
 ## API Endpoints
 
