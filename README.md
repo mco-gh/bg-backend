@@ -50,6 +50,39 @@ python app.py
 
 The server will start on `http://0.0.0.0:5000` by default.
 
+## Testing the Backend
+
+### Web Test Harness
+
+A comprehensive web-based test harness is available at the root URL (`http://localhost:5000/`). The test harness includes:
+
+**Features:**
+- **Dual-Client Interface**: Test both players simultaneously in a single browser window
+- **Real-time Board Visualization**: See the complete game state including all 24 points
+- **Bar and Off Counters**: Track hit checkers and borne-off pieces
+- **Event Logging**: Monitor all Socket.IO events and server responses
+- **Manual Controls**: Create games, join games, roll dice, move pieces, and end turns
+- **Automated Test Scenarios**: 
+  - Basic Game Flow
+  - Hit & Bar Re-entry
+  - Bearing Off (Exact)
+  - Bearing Off (Overshoot)
+  - Win Condition
+  - Error Handling
+
+**How to Use:**
+1. Open `http://localhost:5000/` in your browser
+2. Click "Create Game" on Player 1's panel
+3. Copy the Game ID to Player 2's input field and click "Join Game"
+4. Use the Roll Dice, Move Piece, and End Turn controls to play
+5. Or run automated test scenarios with the scenario buttons at the bottom
+
+**Testing All Features:**
+- **Regular Moves**: Enter point indices (0-23) in the From/To fields
+- **Bar Entry**: Use `-1` as the From point to move from the bar
+- **Bearing Off**: Use `24` (white) or `-1` (black) as the To point to bear off
+- **Monitor State**: Watch the bar/off counters and event logs to verify mechanics
+
 ## API Documentation
 
 ### Socket.IO Events
